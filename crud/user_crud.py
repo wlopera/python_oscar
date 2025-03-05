@@ -1,14 +1,10 @@
 from fastapi import HTTPException
 from models.user_models import UserCreate, UserUpdate
-from db.connection import db
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
-
-# Accede a la colección 'users' desde la base de datos
-collection = db["users"]
+from db.connection import get_db_user
 
 
 async def create_user(user: UserCreate):
+    collection = await get_db_user()  # Obtener conexión en cada petición
     user.username = user.username.lower()
     if await collection.find_one({"username": user.username}):
         raise HTTPException(status_code=400, detail="Usuario ya existe")
@@ -17,6 +13,7 @@ async def create_user(user: UserCreate):
 
 
 async def read_user(username: str):
+    collection = await get_db_user()  # Obtener conexión en cada petición
     user = await collection.find_one({"username": username.lower()}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=404, detail="usuario no encontrado")
@@ -24,19 +21,8 @@ async def read_user(username: str):
 
 
 
-
-MONGO_URI = os.getenv("MONGO_URI")
-DB_NAME = os.getenv("DB_NAME")
-
-
-async def get_db():
-    client = AsyncIOMotorClient(MONGO_URI)
-    db = client[DB_NAME]
-    return db["users"]
-
-
 async def update_user(username: str, user: UserUpdate):
-    collection = await get_db()  # Obtener conexión en cada petición
+    collection = await get_db_user()  # Obtener conexión en cada petición
     update_data = {k: v for k, v in user.dict().items() if v is not None}
     if not update_data:
         raise HTTPException(status_code=400, detail="No hay campos para actualizar")
@@ -49,6 +35,7 @@ async def update_user(username: str, user: UserUpdate):
 
 
 async def delete_user(username: str):
+    collection = await get_db_user()  # Obtener conexión en cada petición
     result = await collection.delete_one({"username": username.lower()})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")

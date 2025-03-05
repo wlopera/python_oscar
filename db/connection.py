@@ -8,11 +8,8 @@ load_dotenv()  # Cargar variables de entorno
 MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("DB_NAME")
 
-client = AsyncIOMotorClient(MONGO_URI)
-print(f"Mongo URI: {MONGO_URI}")  # Esto es solo para debug, recuerda eliminarlo después
-db = client[DB_NAME]
 
-
-# Función para cerrar la conexión
-def close_db_connection():
-    client.close()
+async def get_db_user():
+    client = AsyncIOMotorClient(MONGO_URI)
+    db = client[DB_NAME]
+    return db["users"]
