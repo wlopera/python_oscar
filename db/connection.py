@@ -9,6 +9,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("DB_NAME")
 
 client = AsyncIOMotorClient(MONGO_URI)
+print(f"Mongo URI: {MONGO_URI}")  # Esto es solo para debug, recuerda eliminarlo después
 db = client[DB_NAME]
 
 
