@@ -15,5 +15,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
+@app.get("/")
+def read_root():
+    return {"message": "Hola Mundo"}
+
+
 # Incluir el router de usuarios
 app.include_router(user_router)
