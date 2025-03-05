@@ -17,6 +17,7 @@ async def read_user_endpoint(username: str):
 
 @router.put("/users/{username}")
 async def update_user_endpoint(username: str, user: UserUpdate):
+    print("Peticion PUT: ", username)
     return await update_user(username, user)
 
 
