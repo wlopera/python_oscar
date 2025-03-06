@@ -1,14 +1,11 @@
 from fastapi import FastAPI
-from crud.user_routes import router as user_router  # Importar las rutas de usuario
+from crud.users.user_routes import router as user_router  # Importar las rutas de los usuario
+from crud.pools.pool_routes import router as pool_router  # Importar las rutas de las quinielas
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    print("Imprimir Hola Mundo en la consola..")
-    return {"message": "Hola Mundo"}
-
-
-# Incluir el router de usuarios
+# Incluir el router de los usuarios
 app.include_router(user_router)
+
+# Incluir el router de las quinielas
+app.include_router(pool_router)

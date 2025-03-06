@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from models.user_models import UserCreate, UserUpdate
-from crud.user_crud import create_user, read_user, update_user, delete_user
+from crud.users.user_crud import create_user, read_user, update_user, delete_user
 
 router = APIRouter()
 
